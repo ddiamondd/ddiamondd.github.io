@@ -303,12 +303,51 @@
       
         
           
-            <pre><code>`int main(){
+            <pre><code>`Ignatius 喜欢收集蝴蝶标本和邮票，但是Eddy的爱好很特别，他对数字比较感兴趣，他曾经一度沉迷于素数，而现在他对于一些新的特殊数比较有兴趣。 
+这些特殊数是这样的：这些数都能表示成M^K，M和K是正整数且K&gt;1。 
+正当他再度沉迷的时候，他发现不知道什么时候才能知道这样的数字的数量，因此他又求助于你这位聪明的程序员，请你帮他用程序解决这个问题。 
+为了简化，问题是这样的：给你一个正整数N，确定在1到N之间有多少个可以表示成M^K（K&gt;1)的数。 
+
+Input
+本题有多组测试数据，每组包含一个整数N，1&lt;=N&lt;=1000000000000000000(10^18). 
+
+Output
+对于每组输入，请输出在在1到N之间形式如M^K的数的总数。 
+每组输出占一行。  
+
+Sample Input
+10
+36
+1000000000000000000  
+
+Sample Output
+4
+9
+1001003332
+
+`  
+</code></pre><p><strong>分析：</strong><br>1、M^K K要为素数，若K不为素数的话 K= a<em>b  (M^a)^b = (M^b)^a 会重复计算<br>2、 M^K 有一个数 N = M^K  那么 M = N^(1/N) 因为 2^60 &gt; 1e8  所以只要枚举 60 以内的素数     即可<br>3、如果有两个数 a^i b^j  但是  a = t^j   b = t^i  例如(a b i j 分别为 8，16，4, 3)<br>  这样就会重复计算  减去 N^(1/i</em>j)  就是下边的<br>    <code>ans += res - dfs(i+1, s*a[i]);</code>  </p>
+<pre><code>`#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#define esp 1e-8
+typedef long long ll;
+ll a[20] = {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59};//共有17个数 
+double n;
+ll dfs(int x, ll s){
+    ll ans = 0;
+    for(int i = x; i &lt; 18; i++){
+        ll res = (ll)(pow(n, 1.0/(s*a[i])) + esp);
+        ans += res - dfs(i+1, s*a[i]); //这是减去重复的数 
+    }
+    return ans;
+}
+int main(){
     while(~scanf(&quot;%lf&quot;, &amp;n)){
         printf(&quot;%lld\n&quot;, dfs(0, 1));//素数的下标 以及 当前的素数 
     }
     return 0;
-}`
+}
+`
 </code></pre>
           
         
